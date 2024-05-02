@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: gateway-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      role: gateway-service
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend-deployment
+        - podSelector:
+            matchLabels:
+              app: config-service
+      ports:
+        - protocol: TCP
+          port: 8888

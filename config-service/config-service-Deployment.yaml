@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-service
+  template:
+    metadata:
+      labels:
+        app: config-service
+    spec:
+      containers:
+        - name: config-service-container
+          image: elboukhariyoucef/configservice:1.0.0
+          ports:
+            - containerPort: 9999
+          envFrom:
+            - configMapRef:
+                name: configmaps-config-service
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9999
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9999

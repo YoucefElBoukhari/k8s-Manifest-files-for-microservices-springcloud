@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-service
+  template:
+    metadata:
+      labels:
+        app: gateway-service
+    spec:
+      containers:
+        - name: gateway-service-container
+          image: elboukhariyoucef/gatewayservice:1.0.0
+          ports:
+            - containerPort: 8888
+          envFrom:
+            - configMapRef:
+                name: configmaps-gateway-service
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8888
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8888
